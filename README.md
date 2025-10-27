@@ -78,6 +78,26 @@ MovieRecommendation/
 - **Polymorphism**: Each subclass implements `recommend()` differently
 - **Data Structures**: Extensive use of dictionaries and sets for efficient lookups
 
+### User Interaction (10 pts)
+
+The system provides a **menu-driven CLI** with comprehensive search functionality:
+
+**Search by Title** (`search_movies_by_title()`):
+- Case-insensitive partial matching
+- Finds all movies containing the search term in their title
+- Returns detailed movie information (genres, ratings, rating count)
+
+**Search by Genre** (`search_movies_by_genre()`):
+- Case-insensitive genre matching (exact or partial)
+- Searches through genre-movie mappings for efficient lookup
+- Lists all movies in the specified genre
+- Provides helpful suggestions when genre not found
+
+**Additional Features**:
+- List all available genres with movie counts
+- Show movie details by ID
+- Handles empty results gracefully with helpful error messages
+
 ### Recursion (10 pts)
 
 The system implements **two recursive features**:
@@ -148,6 +168,14 @@ The demonstration script will:
 3. Generate recommendations for a test user
 4. Display user statistics and recommendations
 5. Compare results from both systems
+6. Launch an interactive menu with options:
+   - Show genre-based recommendations
+   - Show user-similarity recommendations
+   - Compare recommender systems
+   - Interactive recursive depth exploration
+   - **Search movies by title or genre**
+   - Show movie details by ID
+   - Exit
 
 ## How It Works
 
@@ -170,7 +198,13 @@ The demonstration script will:
    - Menu options return to main menu recursively after execution
    - Supports recursive depth configuration for user similarity searches
 
-4. **Error Handling**:
+4. **Interactive Search**:
+   - Search by title with partial matching (e.g., "batman" finds all Batman movies)
+   - Search by genre with case-insensitive matching
+   - List all available genres with movie counts
+   - Browse search results with detailed movie information
+
+5. **Error Handling**:
    - All operations wrapped in try-except blocks
    - Graceful degradation when data is missing or invalid
    - Detailed error messages guide users to solutions
