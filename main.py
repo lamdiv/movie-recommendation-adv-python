@@ -114,23 +114,72 @@ def compare_recommenders(user_id, genre_recommender, user_similarity_recommender
         for movie_id in list(only_similarity)[:3]:
             if movie_id in movies:
                 print(f"    • {movies[movie_id].title}")
+def main_menu(genre_recommender, user_similarity_recommender, movies, user_ratings):
+    print("\nMAIN MENU")
+    print("1. Show genre-based demo")
+    print("2. Show user-similarity demo")
+    print("3. Compare recommenders")
+    print("4. Interactive user-similarity (choose depth)")
+    print("5. Exit")
+
+    choice = input("Enter choice: ").strip()
+    if choice == '1':
+        try:
+            user_id = int(input('Enter user id (blank for first user): ').strip() or min(user_ratings.keys()))
+        except Exception:
+            user_id = min(user_ratings.keys())
+        demonstrate_genre_recommender(user_id, genre_recommender, movies, user_ratings)
+        return main_menu(genre_recommender, user_similarity_recommender, movies, user_ratings)
+    elif choice == '2':
+        try:
+            user_id = int(input('Enter user id (blank for first user): ').strip() or min(user_ratings.keys()))
+        except Exception:
+            user_id = min(user_ratings.keys())
+        demonstrate_user_similarity_recommender(user_id, user_similarity_recommender, movies, user_ratings)
+        return main_menu(genre_recommender, user_similarity_recommender, movies, user_ratings)
+    elif choice == '3':
+        try:
+            user_id = int(input('Enter user id (blank for first user): ').strip() or min(user_ratings.keys()))
+        except Exception:
+            user_id = min(user_ratings.keys())
+        compare_recommenders(user_id, genre_recommender, user_similarity_recommender, movies, user_ratings)
+        return main_menu(genre_recommender, user_similarity_recommender, movies, user_ratings)
+    elif choice == '4':
+        try:
+            user_id = int(input('Enter user id (blank for first user): ').strip() or min(user_ratings.keys()))
+        except Exception:
+            user_id = min(user_ratings.keys())
+        try:
+            depth = int(input('Enter recursive depth (1 = direct, 2 = friends-of-friends): ').strip() or '2')
+            if depth < 1:
+                depth = 1
+        except Exception:
+            depth = 2
+        demonstrate_user_similarity_recommender(user_id, user_similarity_recommender, movies, user_ratings, recursive_depth=depth)
+        return main_menu(genre_recommender, user_similarity_recommender, movies, user_ratings)
+    elif choice == '5':
+        print('Exiting.')
+        return
+    else:
+        print('Invalid choice')
+        return main_menu(genre_recommender, user_similarity_recommender, movies, user_ratings)
 
 
 def main():
     print("\n" + "="*70)
     print("MOVIE RECOMMENDATION SYSTEM")
     print("="*70)
-    
+
     print("\nLoading data...")
     movies, user_ratings, user_movie_mapping, genre_movies = load_data(
         'dataset/movies.csv',
         'dataset/ratings.csv'
     )
-    
+
     print(f"✓ Loaded {len(movies)} movies")
     print(f"✓ Loaded ratings from {len(user_ratings)} users")
     print(f"✓ Mapped {len(genre_movies)} genres")
-    
+
     print("\nInitializing recommendation engines...")
     genre_recommender = GenreRecommender(movies, user_ratings, genre_movies)
     user_similarity_recommender = UserSimilarityRecommender(
@@ -138,21 +187,23 @@ def main():
     )
     print("✓ Initialized Genre Recommender")
     print("✓ Initialized User Similarity Recommender")
-    
+
     test_user_id = 1
-    
+
     if test_user_id not in user_ratings:
         print(f"\nUser {test_user_id} not found. Using first available user.")
         test_user_id = min(user_ratings.keys())
-    
+
     print_user_stats(test_user_id, movies, user_ratings)
     demonstrate_genre_recommender(test_user_id, genre_recommender, movies, user_ratings)
     demonstrate_user_similarity_recommender(test_user_id, user_similarity_recommender, movies, user_ratings)
     compare_recommenders(test_user_id, genre_recommender, user_similarity_recommender, movies, user_ratings)
-    
+
     print(f"\n{'='*70}")
     print("DEMONSTRATION COMPLETE")
     print(f"{'='*70}\n")
+
+    main_menu(genre_recommender, user_similarity_recommender, movies, user_ratings)
 
 
 if __name__ == "__main__":
