@@ -78,6 +78,64 @@ MovieRecommendation/
 - **Polymorphism**: Each subclass implements `recommend()` differently
 - **Data Structures**: Extensive use of dictionaries and sets for efficient lookups
 
+### Recursion (10 pts)
+
+The system implements **two recursive features**:
+
+**1. Recursive Search for "Friends of Friends"** (`user_similarity_recommender.py`):
+- The `find_similar_users_recursive()` method implements a recursive depth-first search
+- Finds similar users of similar users (up to configurable depth)
+- Uses decay rate to weight distant connections less than direct connections
+- Allows exploring user similarity networks beyond immediate neighbors
+- Example: With depth=2, finds users similar to users who are similar to you
+
+**2. Recursive Menu Navigation System** (`main.py`):
+- The `main_menu()` function implements a recursive menu system
+- After executing each menu option, it recursively calls itself to return to the menu
+- Enables continuous interaction without explicit loop constructs
+- Gracefully handles user input errors and returns to menu
+- Supports exiting via user choice or keyboard interrupt
+
+```python
+# Recursive menu example
+def main_menu(...):
+    choice = input("Enter choice: ").strip()
+    if choice == '1':
+        # Execute action
+        return main_menu(...)  # Recursive call
+    # ...
+```
+
+### Exception Handling (10 pts)
+
+The system handles **three+ types of errors gracefully**:
+
+**1. Missing Dataset File** (`data_loader.py`, `main.py`):
+- Catches `FileNotFoundError` when CSV files are missing
+- Provides clear error messages with suggestions for resolution
+- Handles incomplete or corrupted dataset files
+
+**2. Invalid User Input** (`main.py`):
+- Validates user ID and movie ID inputs
+- Handles non-numeric inputs gracefully
+- Detects invalid movie IDs not in dataset
+- Provides helpful error messages and fallbacks
+
+**3. Empty Recommendations** (`main.py`):
+- Checks for empty recommendation lists before processing
+- Provides detailed error messages explaining why recommendations failed:
+  - No similar users found
+  - All candidate movies already rated
+  - No movies match preferred genres
+- Handles cases where user has no ratings or ratings below threshold
+
+**4. Additional Error Handling**:
+- CSV parsing errors (`pd.errors.ParserError`)
+- Empty data files (`pd.errors.EmptyDataError`)
+- Invalid data types in CSV files (`ValueError`, `KeyError`)
+- Keyboard interrupts for graceful shutdown
+- Movie not found errors
+
 ## Usage
 
 ```bash
@@ -99,6 +157,20 @@ The demonstration script will:
    - Excludes already-rated movies
 
 2. **User Similarity Recommendations**:
-   - Calculates Jaccard similarity between user and all other users
+   - **Standard mode**: Calculates Jaccard similarity between user and all other users
    - Finds the most similar users
    - Recommends movies liked by similar users, ranked by popularity
+   - **Recursive mode** (depth > 1): Explores similar users of similar users
+     - Uses depth-first search to traverse user similarity network
+     - Applies decay rate to weight distant connections
+     - Provides broader recommendation pool from extended user network
+
+3. **Interactive Menu**:
+   - Recursive menu system allows continuous interaction
+   - Menu options return to main menu recursively after execution
+   - Supports recursive depth configuration for user similarity searches
+
+4. **Error Handling**:
+   - All operations wrapped in try-except blocks
+   - Graceful degradation when data is missing or invalid
+   - Detailed error messages guide users to solutions

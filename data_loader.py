@@ -3,37 +3,65 @@ from movie import Movie
 
 
 def load_movies(movies_path):
-    movies_df = pd.read_csv(movies_path)
-    movies = {}
-    
-    for _, row in movies_df.iterrows():
-        movie_id = int(row['movieId'])
-        movies[movie_id] = Movie(
-            movie_id=movie_id,
-            title=row['title'],
-            genres=row['genres']
-        )
-    
-    return movies
+    try:
+        movies_df = pd.read_csv(movies_path)
+        movies = {}
+        
+        for _, row in movies_df.iterrows():
+            try:
+                movie_id = int(row['movieId'])
+                movies[movie_id] = Movie(
+                    movie_id=movie_id,
+                    title=row['title'],
+                    genres=row['genres']
+                )
+            except (ValueError, KeyError) as e:
+                print(f"Warning: Skipping invalid movie row: {e}")
+                continue
+        
+        if not movies:
+            raise ValueError("No valid movies could be loaded from the dataset")
+        
+        return movies
+    except FileNotFoundError:
+        raise
+    except pd.errors.EmptyDataError:
+        raise ValueError("The movies CSV file is empty")
+    except pd.errors.ParserError as e:
+        raise ValueError(f"Error parsing movies CSV file: {e}")
 
 
 def load_ratings_and_compute_averages(ratings_path, movies):
-    ratings_df = pd.read_csv(ratings_path)
-    user_ratings = {}
-    
-    for _, row in ratings_df.iterrows():
-        user_id = int(row['userId'])
-        movie_id = int(row['movieId'])
-        rating = float(row['rating'])
+    try:
+        ratings_df = pd.read_csv(ratings_path)
+        user_ratings = {}
         
-        if movie_id in movies:
-            movies[movie_id].add_rating(rating)
+        for _, row in ratings_df.iterrows():
+            try:
+                user_id = int(row['userId'])
+                movie_id = int(row['movieId'])
+                rating = float(row['rating'])
+                
+                if movie_id in movies:
+                    movies[movie_id].add_rating(rating)
+                
+                if user_id not in user_ratings:
+                    user_ratings[user_id] = {}
+                user_ratings[user_id][movie_id] = rating
+            except (ValueError, KeyError) as e:
+                print(f"Warning: Skipping invalid rating row: {e}")
+                continue
         
-        if user_id not in user_ratings:
-            user_ratings[user_id] = {}
-        user_ratings[user_id][movie_id] = rating
-    
-    return user_ratings
+        if not user_ratings:
+            raise ValueError("No valid ratings could be loaded from the dataset")
+        
+        return user_ratings
+    except FileNotFoundError:
+        raise
+    except pd.errors.EmptyDataError:
+        raise ValueError("The ratings CSV file is empty")
+    except pd.errors.ParserError as e:
+        raise ValueError(f"Error parsing ratings CSV file: {e}")
 
 
 def create_user_movie_mapping(user_ratings):

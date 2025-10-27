@@ -38,48 +38,82 @@ def print_user_stats(user_id, movies, user_ratings):
 
 
 def demonstrate_genre_recommender(user_id, genre_recommender, movies, user_ratings):
-    print(f"\n{'='*70}")
-    print(f"GENRE-BASED RECOMMENDATIONS FOR USER {user_id}")
-    print(f"{'='*70}")
-    
-    preferred_genres = genre_recommender.get_user_preferred_genres(user_id)
-    if preferred_genres:
-        print(f"\nUser's preferred genres:")
-        for genre, avg_rating in list(preferred_genres.items())[:5]:
-            print(f"  • {genre}: {avg_rating:.2f} average rating")
-    
-    recommendations = genre_recommender.recommend(user_id, n=10)
-    
-    if recommendations:
-        print(f"\nTop 10 Recommended Movies:")
-        for i, movie in enumerate(recommendations, 1):
-            print(f"\n{i}. Movie ID: {movie.movie_id}")
-            print_movie_info(movie)
-    else:
-        print("\nNo recommendations available.")
+    try:
+        print(f"\n{'='*70}")
+        print(f"GENRE-BASED RECOMMENDATIONS FOR USER {user_id}")
+        print(f"{'='*70}")
+        
+        preferred_genres = genre_recommender.get_user_preferred_genres(user_id)
+        
+        if not preferred_genres:
+            print("\nError: No preferred genres found. This may occur if:")
+            print("  - User has no ratings")
+            print("  - All user's ratings are below the minimum threshold")
+            return
+        
+        if preferred_genres:
+            print(f"\nUser's preferred genres:")
+            for genre, avg_rating in list(preferred_genres.items())[:5]:
+                print(f"  • {genre}: {avg_rating:.2f} average rating")
+        
+        recommendations = genre_recommender.recommend(user_id, n=10)
+        
+        if not recommendations:
+            print("\nError: No recommendations available. This may occur if:")
+            print("  - No movies match the user's preferred genres")
+            print("  - User has already rated all movies in their preferred genres")
+            return
+        
+        if recommendations:
+            print(f"\nTop 10 Recommended Movies:")
+            for i, movie in enumerate(recommendations, 1):
+                print(f"\n{i}. Movie ID: {movie.movie_id}")
+                print_movie_info(movie)
+    except Exception as e:
+        print(f"\nError generating recommendations: {e}")
+        print("Please try again or choose a different option.")
 
 
-def demonstrate_user_similarity_recommender(user_id, user_similarity_recommender, movies, user_ratings):
-    print(f"\n{'='*70}")
-    print(f"USER SIMILARITY-BASED RECOMMENDATIONS FOR USER {user_id}")
-    print(f"{'='*70}")
-    
-    similar_users = user_similarity_recommender.find_similar_users(user_id, n=5)
-    
-    if similar_users:
-        print(f"\nMost Similar Users:")
-        for similar_user_id, similarity in similar_users:
-            print(f"  • User {similar_user_id}: {similarity*100:.1f}% similar")
-    
-    recommendations = user_similarity_recommender.recommend(user_id, n=10)
-    
-    if recommendations:
-        print(f"\nTop 10 Recommended Movies (liked by similar users):")
-        for i, movie in enumerate(recommendations, 1):
-            print(f"\n{i}. Movie ID: {movie.movie_id}")
-            print_movie_info(movie)
-    else:
-        print("\nNo recommendations available.")
+def demonstrate_user_similarity_recommender(user_id, user_similarity_recommender, movies, user_ratings, recursive_depth=1):
+    try:
+        print(f"\n{'='*70}")
+        print(f"USER SIMILARITY-BASED RECOMMENDATIONS FOR USER {user_id}")
+        print(f"{'='*70}")
+        
+        if recursive_depth > 1:
+            print(f"\nUsing recursive search with depth {recursive_depth} (friends of friends...)")
+            similar_users = user_similarity_recommender.find_similar_users_recursive(user_id, depth=recursive_depth, max_neighbors=10)
+        else:
+            similar_users = user_similarity_recommender.find_similar_users(user_id, n=5)
+        
+        if not similar_users:
+            print("\nError: No similar users found. Recommendations cannot be generated.")
+            return
+        
+        if similar_users:
+            print(f"\nMost Similar Users:")
+            for similar_user_id, similarity in similar_users:
+                print(f"  • User {similar_user_id}: {similarity*100:.1f}% similar")
+        
+        recommendations = user_similarity_recommender.recommend(user_id, n=10, recursive_depth=recursive_depth)
+        
+        if not recommendations:
+            print("\nError: No recommendations available. This may occur if:")
+            print("  - No similar users found")
+            print("  - Similar users haven't rated any movies you haven't rated")
+            print("  - All candidate movies were filtered out")
+            return
+        
+        if recommendations:
+            print(f"\nTop 10 Recommended Movies (liked by similar users):")
+            for i, movie in enumerate(recommendations, 1):
+                print(f"\n{i}. Movie ID: {movie.movie_id}")
+                print_movie_info(movie)
+        else:
+            print("\nError: No recommendations available.")
+    except Exception as e:
+        print(f"\nError generating recommendations: {e}")
+        print("Please try again or choose a different option.")
 
 
 def compare_recommenders(user_id, genre_recommender, user_similarity_recommender, movies, user_ratings):
