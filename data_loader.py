@@ -15,8 +15,7 @@ def load_movies(movies_path):
                     title=row['title'],
                     genres=row['genres']
                 )
-            except (ValueError, KeyError) as e:
-                print(f"Warning: Skipping invalid movie row: {e}")
+            except (ValueError, KeyError):
                 continue
         
         if not movies:
@@ -48,8 +47,7 @@ def load_ratings_and_compute_averages(ratings_path, movies):
                 if user_id not in user_ratings:
                     user_ratings[user_id] = {}
                 user_ratings[user_id][movie_id] = rating
-            except (ValueError, KeyError) as e:
-                print(f"Warning: Skipping invalid rating row: {e}")
+            except (ValueError, KeyError):
                 continue
         
         if not user_ratings:
