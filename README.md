@@ -80,7 +80,18 @@ MovieRecommendation/
 
 ### User Interaction (10 pts)
 
-The system provides a **menu-driven CLI** with comprehensive search and rating functionality:
+The system provides a **menu-driven CLI** with comprehensive search, rating, and recommendation functionality:
+
+**Requesting Recommendations** (`request_recommendations()`):
+- Primary menu option to get personalized movie recommendations
+- Enter user ID to get custom recommendations
+- Choose recommendation type:
+  - Genre-based recommendations
+  - User similarity-based recommendations
+  - Both types side-by-side with overlap analysis
+  - Recursive depth similarity search
+- Handles new users gracefully with profile creation guidance
+- Displays detailed movie information for each recommendation
 
 **Search by Title** (`search_movies_by_title()`):
 - Case-insensitive partial matching
@@ -177,8 +188,9 @@ The demonstration script will:
 4. Display user statistics and recommendations
 5. Compare results from both systems
 6. Launch an interactive menu with options:
-   - Show genre-based recommendations
-   - Show user-similarity recommendations
+   - **Request recommendations** (main feature)
+   - Show genre-based demo
+   - Show user-similarity demo
    - Compare recommender systems
    - Interactive recursive depth exploration
    - **Search movies by title or genre**
@@ -214,14 +226,21 @@ The demonstration script will:
    - List all available genres with movie counts
    - Browse search results with detailed movie information
 
-5. **Rating & Profile Management**:
+5. **Requesting Recommendations**:
+   - Interactive menu allows users to request personalized recommendations
+   - Flexible recommendation selection (genre, similarity, both, or recursive)
+   - Side-by-side comparison shows overlapping recommendations
+   - Handles new users with guidance on profile creation
+   - Clean, user-friendly interface for getting movie suggestions
+
+6. **Rating & Profile Management**:
    - Users can rate movies with validation (0.5-5.0 scale)
    - System automatically creates new users when rating
    - Updates movie average ratings in real-time
    - Maintains user-movie mappings for similarity calculations
    - Supports viewing and updating user rating history
 
-6. **Error Handling**:
+7. **Error Handling**:
    - All operations wrapped in try-except blocks
    - Graceful degradation when data is missing or invalid
    - Detailed error messages guide users to solutions
