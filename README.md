@@ -60,7 +60,6 @@ The program will:
 
 **Diwash Lamichhane**
 - **Main Responsibilities:**
-  - Full-stack development and architecture
   - Data handling & classes implementation (Requirement 1)
   - Recommendation engine implementation (Requirement 2)
   - Search functionality (by title and genre)
