@@ -80,7 +80,7 @@ MovieRecommendation/
 
 ### User Interaction (10 pts)
 
-The system provides a **menu-driven CLI** with comprehensive search functionality:
+The system provides a **menu-driven CLI** with comprehensive search and rating functionality:
 
 **Search by Title** (`search_movies_by_title()`):
 - Case-insensitive partial matching
@@ -97,6 +97,14 @@ The system provides a **menu-driven CLI** with comprehensive search functionalit
 - List all available genres with movie counts
 - Show movie details by ID
 - Handles empty results gracefully with helpful error messages
+
+**Rating Movies & Profile Management** (`rate_movie()`, `view_user_ratings()`):
+- Rate movies with values from 0.5 to 5.0 (in 0.5 increments)
+- Create new users or update existing user profiles
+- Automatically updates movie average ratings when rated
+- Updates user-movie mappings for similarity calculations
+- View user's rating history sorted by rating value
+- Support for rating updates (changing previous ratings)
 
 ### Recursion (10 pts)
 
@@ -174,6 +182,8 @@ The demonstration script will:
    - Compare recommender systems
    - Interactive recursive depth exploration
    - **Search movies by title or genre**
+   - **Rate a movie (update profile)**
+   - **View user ratings**
    - Show movie details by ID
    - Exit
 
@@ -204,7 +214,14 @@ The demonstration script will:
    - List all available genres with movie counts
    - Browse search results with detailed movie information
 
-5. **Error Handling**:
+5. **Rating & Profile Management**:
+   - Users can rate movies with validation (0.5-5.0 scale)
+   - System automatically creates new users when rating
+   - Updates movie average ratings in real-time
+   - Maintains user-movie mappings for similarity calculations
+   - Supports viewing and updating user rating history
+
+6. **Error Handling**:
    - All operations wrapped in try-except blocks
    - Graceful degradation when data is missing or invalid
    - Detailed error messages guide users to solutions
