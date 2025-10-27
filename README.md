@@ -1,6 +1,35 @@
 # Movie Recommendation System
 
-Movie recommendation system using the MovieLens dataset with two recommendation approaches: genre-based and user similarity-based filtering.
+A comprehensive movie recommendation system built with Python that provides personalized movie suggestions using collaborative filtering techniques. The system analyzes user preferences and movie ratings to generate recommendations through two complementary approaches:
+
+- **Genre-Based Recommendations**: Identifies user's preferred genres based on their rating history and recommends highly-rated movies in those genres
+- **User Similarity-Based Recommendations**: Uses Jaccard similarity to find users with similar tastes and recommends movies they've liked
+
+The system features a fully interactive menu-driven interface that allows users to search movies, rate films, request personalized recommendations, and explore the recommendation algorithms.
+
+## Project Contributors
+
+### Developer
+
+**Diwash Lamichhane**
+
+**Role & Responsibilities:**
+- Full-stack development of the recommendation system
+- Implementation of genre-based and user similarity recommendation algorithms
+- Design and implementation of the interactive menu-driven CLI
+- Exception handling and error management throughout the system
+- Recursive search algorithms for "friends-of-friends" similarity
+- Search functionality (by title and genre)
+- Rating system and user profile management
+- Code documentation and README development
+- Testing and validation of all features
+
+**Technologies Used:**
+- Python 3.11
+- Pandas for data manipulation
+- Object-oriented programming (OOP) principles
+- Abstract base classes for design patterns
+- Recursion and depth-first search algorithms
 
 ## Dataset
 
@@ -175,29 +204,101 @@ The system handles **three+ types of errors gracefully**:
 - Keyboard interrupts for graceful shutdown
 - Movie not found errors
 
-## Usage
+## Installation & Setup
+
+### Prerequisites
+- Python 3.11 or higher
+- pip package manager
+
+### Installation Steps
+
+1. **Clone or download the project**
+   ```bash
+   cd MovieRecommendation
+   ```
+
+2. **Create a virtual environment** (recommended)
+   ```bash
+   python -m venv env
+   source env/bin/activate  # On Windows: env\Scripts\activate
+   ```
+
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Verify dataset files**
+   Ensure the `dataset/` folder contains:
+   - `movies.csv`
+   - `ratings.csv`
+
+## How to Run
+
+### Running the Application
+
+Simply execute the main script:
 
 ```bash
 python main.py
 ```
 
-The demonstration script will:
-1. Load the MovieLens dataset
-2. Initialize both recommendation engines
-3. Generate recommendations for a test user
-4. Display user statistics and recommendations
-5. Compare results from both systems
-6. Launch an interactive menu with options:
-   - **Request recommendations** (main feature)
-   - Show genre-based demo
-   - Show user-similarity demo
-   - Compare recommender systems
-   - Interactive recursive depth exploration
-   - **Search movies by title or genre**
-   - **Rate a movie (update profile)**
-   - **View user ratings**
-   - Show movie details by ID
-   - Exit
+### Program Flow
+
+When you run the application:
+
+1. **Initialization Phase**
+   - Loads movie data from `dataset/movies.csv`
+   - Loads user ratings from `dataset/ratings.csv`
+   - Initializes genre and similarity recommenders
+   - Displays loading progress
+
+2. **Automatic Demo Phase**
+   - Shows statistics for user ID 1 (or first available user)
+   - Displays genre-based recommendations
+   - Displays user similarity-based recommendations
+   - Compares both recommendation systems
+
+3. **Interactive Menu**
+   After the demo, you'll see a menu with the following options:
+   
+   - **1. Request recommendations** - Get personalized movie suggestions
+   - **2. Show genre-based demo** - View genre recommendation algorithm
+   - **3. Show user-similarity demo** - View similarity-based algorithm
+   - **4. Compare recommenders** - Side-by-side comparison
+   - **5. Interactive user-similarity** - Explore with recursive depth
+   - **6. Search movies** - Search by title or genre
+   - **7. Rate a movie** - Update your user profile
+   - **8. View user ratings** - See your rating history
+   - **9. Show movie info by id** - Get movie details
+   - **10. Exit** - Quit the application
+
+### Example Usage
+
+**Getting Recommendations:**
+```
+Menu choice: 1
+Enter your user ID: 5
+Select recommendation type: 3 (Both)
+→ See genre-based and similarity-based recommendations side-by-side
+```
+
+**Rating a Movie:**
+```
+Menu choice: 7
+Enter your user ID: 5
+Enter movie ID to rate: 1
+Enter rating: 4.5
+→ Movie rated and profile updated
+```
+
+**Searching Movies:**
+```
+Menu choice: 6
+Search Options: 1 (Search by title)
+Enter title: "batman"
+→ Find all Batman movies
+```
 
 ## How It Works
 
@@ -244,3 +345,65 @@ The demonstration script will:
    - All operations wrapped in try-except blocks
    - Graceful degradation when data is missing or invalid
    - Detailed error messages guide users to solutions
+
+## Required Files
+
+All Python scripts necessary to run the application:
+
+### Core Application Files
+
+1. **`main.py`** - Main entry point of the application
+   - Initializes the recommendation system
+   - Implements the interactive menu-driven CLI
+   - Handles user input and navigation
+   - Contains functions for requesting recommendations, searching, and rating
+
+2. **`movie.py`** - Movie class definition
+   - Defines the Movie class with attributes: movie_id, title, genres
+   - Maintains average rating and total ratings count
+   - Methods: `add_rating()`, `get_genres()`, `has_genre()`
+
+3. **`data_loader.py`** - Data loading functionality
+   - Loads movies from CSV using pandas
+   - Loads and processes user ratings
+   - Creates user-movie mappings
+   - Creates genre-movie mappings
+   - Comprehensive error handling for missing/corrupted files
+
+4. **`recommender.py`** - Base recommender class
+   - Abstract base class using ABC and @abstractmethod
+   - Common methods for all recommender types
+   - Abstract method `recommend()` for subclasses to implement
+
+5. **`genre_recommender.py`** - Genre-based recommendation engine
+   - Subclass of Recommender
+   - Analyzes user preferences by genre
+   - Recommends top-rated movies from user's favorite genres
+
+6. **`user_similarity_recommender.py`** - User similarity recommendation engine
+   - Subclass of Recommender
+   - Implements Jaccard similarity for finding similar users
+   - Includes recursive "friends-of-friends" search algorithm
+   - Recommends movies liked by similar users
+
+### Configuration Files
+
+7. **`requirements.txt`** - Python package dependencies
+   - Lists all required Python packages (pandas)
+
+8. **`README.md`** - This documentation file
+   - Comprehensive project documentation
+   - Installation and usage instructions
+
+### Dataset Files (in `dataset/` folder)
+
+9. **`dataset/movies.csv`** - Movie database
+10. **`dataset/ratings.csv`** - User rating data
+
+### Output
+
+The application generates no additional files - all results are displayed in the terminal.
+
+## License
+
+This project is for educational purposes. The MovieLens dataset is provided by GroupLens Research under their research license.
